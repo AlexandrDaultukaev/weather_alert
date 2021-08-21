@@ -33,7 +33,9 @@ def check_weather():
                 print("Советуем взять зонт.\n")
             else:
                 print("Better to take an umbrella.\n")
-        print(hour["weather"][0]["description"])
+        converter = requests.get(f"https://showcase.api.linx.twenty57.net/UnixTime/fromunix?timestamp={hour['dt']}")
+        converter.raise_for_status()
+        print(f"{converter.json()}: {hour['weather'][0]['description']}")
     if key == 0:
         if params["lang"] in ["RU", "Ru", "ru", "RUS", "Rus", "rus"]:
             print("Вероятнее всего дождя не будет.\n")
