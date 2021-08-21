@@ -15,6 +15,7 @@ date: str
 
 
 def settings():
+    """Configures credentials.json"""
     global params, email, password, UTC, full_params
     try:
         with open("credentials.json", "r") as file:
@@ -41,6 +42,7 @@ def settings():
 
 
 def current_time_zone(time: str) -> str:
+    """Formatting to current time zone"""
     current_time = int(time.split(":")[0]) + int(UTC)
     if current_time >= 24:
         current_time -= 24
@@ -48,6 +50,7 @@ def current_time_zone(time: str) -> str:
 
 
 def check_weather():
+    """Generates and sends forecast"""
     global forecast, date
     key = 0
     hourly_forecast = []
