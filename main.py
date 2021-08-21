@@ -24,9 +24,26 @@ def settings():
             json.dump(params, data)
 
 
+def check_weather():
+    key = 0
+    for hour in weather_data["hourly"][:12]:
+        if int(hour["weather"][0]["id"]) < 800 and key == 0:
+            key = 1
+            if params["lang"] in ["RU", "Ru", "ru", "RUS", "Rus", "rus"]:
+                print("Советуем взять зонт.\n")
+            else:
+                print("Better to take an umbrella.\n")
+        print(hour["weather"][0]["description"])
+    if key == 0:
+        if params["lang"] in ["RU", "Ru", "ru", "RUS", "Rus", "rus"]:
+            print("Вероятнее всего дождя не будет.\n")
+        else:
+            print("Most likely it won't rain.\n")
+
 settings()
 response = requests.get("https://api.openweathermap.org/data/2.5/onecall", params=params)
 response.raise_for_status()
 weather_data = response.json()
+check_weather()
 
 print(weather_data)
