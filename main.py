@@ -10,6 +10,9 @@ email: str
 password: str
 UTC: int
 full_params = {}
+forecast: str
+date: str
+
 
 def settings():
     global params, email, password, UTC, full_params
@@ -37,6 +40,13 @@ def settings():
             json.dump(full_params, data)
 
 
+def current_time_zone(time: str) -> str:
+    current_time = int(time.split(":")[0]) + int(UTC)
+    if current_time >= 24:
+        current_time -= 24
+    return str(current_time) + ":00:00"
+
+
 def check_weather():
     global forecast, date
     key = 0
@@ -51,7 +61,7 @@ def check_weather():
         converter = requests.get(f"https://showcase.api.linx.twenty57.net/UnixTime/fromunix?timestamp={hour['dt']}")
         converter.raise_for_status()
         date = converter.json().split(' ')[0]
-        hourly_forecast.append(f"{converter.json().split(' ')[1]}: {hour['weather'][0]['description']}")
+        hourly_forecast.append(f"{current_time_zone(converter.json().split(' ')[1])}: {hour['weather'][0]['description']}")
     if key == 0:
         if params["lang"] in ["RU", "Ru", "ru", "RUS", "Rus", "rus"]:
             forecast = "Вероятнее всего дождя не будет.\n"
@@ -69,5 +79,3 @@ response = requests.get("https://api.openweathermap.org/data/2.5/onecall", param
 response.raise_for_status()
 weather_data = response.json()
 check_weather()
-
-print(weather_data)
